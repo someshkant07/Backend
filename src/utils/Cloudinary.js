@@ -17,7 +17,15 @@ export const uploadOnCloudinary = (filePath) => {
         console.error("Cloudinary upload error: ", error);
         return reject(error);
       }
-      resolve(result);
+      // Unlink the file from the local storage
+      fs.unlink(filePath, (unlinkError) => {
+        if (unlinkError) {
+          console.error("Error deleting local file: ", unlinkError);
+          return reject(unlinkError);
+        }
+        console.log("Successfully deleted local file: ", filePath);
+        resolve(result);
+      });
     });
   });
 };
